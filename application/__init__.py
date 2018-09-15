@@ -8,6 +8,8 @@ app.config["SQLALCHEMY_ECHO"] = True
 db = SQLAlchemy(app)
 
 from application import views
-from application.forum import models
+from application.threads import models
+from application.threads import views
+from application.auth import models
 
 db.create_all()

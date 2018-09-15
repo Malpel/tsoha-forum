@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h1>Keskustelut</h1>
+    <ul>
+        {% for thread in threads %}
+        <li class="list-group-item"><a href="{{thread.id}}">{{thread.title}}</a></li>
+        {% endfor %}
+    </ul>
+   
+{% endblock %}
