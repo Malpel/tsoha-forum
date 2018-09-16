@@ -4,8 +4,14 @@
     <h1>Keskustelut</h1>
     <ul>
         {% for thread in threads %}
-        <li class="list-group-item"><a href="{{thread.id}}">{{thread.title}}</a></li>
+        <li class="list-group-item">
+            <a href="{{thread.id}}">{{thread.title}}</a>
+            <a href="{{thread.id}}/poista">Poista</a>
+        </li>
         {% endfor %}
     </ul>
-   
+    <div>
+        <a href="{{url_for('new_thread')}}">Aloita uusi</a>
+        <a href="{{url_for('index')}}">Etusivulle</a>
+    </div>
 {% endblock %}

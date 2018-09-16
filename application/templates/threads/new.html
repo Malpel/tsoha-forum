@@ -2,10 +2,10 @@
 
 {%  block body %}
 <h1>Uusi keskustelu</h1>
-<form method="POST" action="{{ url_for('new_thread')}}">
+<form method="POST" >
    <div class="form-group">
         {{ form.title.label }}
-        {{ form.title }}
+        {{ form.title(rows='25', cols='100') }}
         <ul>
             {% for error in form.title.errors %}
              <li>{{ error }}</li>
@@ -14,7 +14,7 @@
    </div>
    <div class="form-group">
         {{ form.text.label }}
-        {{ form.text }}
+        {{ form.text(rows='25', cols='100') }}
         <ul>
             {% for error in form.text.errors %}
              <li>{{ error }}</li>

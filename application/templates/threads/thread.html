@@ -1,4 +1,30 @@
+{% extends 'layout.html' %}
 {% block body %}
     <h1>{{thread.title}}</h1>
-    <p>{{comment.text}}</p>
+       
+    <div>
+        {% for comment in comments %}
+        <table class="table">
+            <tr>
+                <td><p> {{ comment.text }}   </p></td>
+                <td><a href="{{url_for('edit_comment', id=comment.id)}}">Edit</a></td>
+            </tr>
+        </table>
+        
+                
+        {% endfor %}
+    </div>
+    <div>
+        <h2> New Comment</h2>
+        <form method="POST">
+            <div class="form-group">
+                {{form.text(rows='25',cols='100')}}            </div>    
+            <p><input class="btn btn-primary" type="submit" value="submit"></p>
+
+        </form>
+    </div>
+    <div>
+        <a href="{{url_for('index')}}">Etusivulle</a>
+
+    </div>
 {% endblock %}
