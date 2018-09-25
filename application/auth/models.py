@@ -12,6 +12,8 @@ class User(db.Model):
     username = db.Column(db.String(144), nullable=False)
     password = db.Column(db.String(144), nullable=False)
     role = db.relationship('Role', secondary='user_role')
+    comments = db.relationship('Comment', backref='account', lazy=True)
+    threads = db.relationship("Thread", backref="account", lazy=True)
 
     def __init__(self, name, username, password):
         self.name = name

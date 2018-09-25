@@ -1,24 +1,53 @@
 {% extends 'layout.html' %}
+
 {% block body %}
     <h1>{{thread.title}}</h1>
        
     <div>
         {% for comment in comments %}
         <table class="table">
-            <tr>
-                <td><p> {{ comment.text }}   </p></td>
-                <td><a href="{{url_for('edit_comment', id=comment.id)}}">Edit</a></td>
+            <tr> {{ comment.user }}
+                <td>
+                    {% if comment.parent_id is not none %}
+                    <h4>vastaus > {{ comment.parent_id }}</h3>
+                    {% endif %}
+                    <p> {{ comment.text }}   </p></td>
+                <tr>
+                        <td>
+                                <a href="{{url_for('edit_comment', id=comment.id)}}">Edit</a>
+                        </td>
+                             {#  <button class="open-button" onClick="openForm()">Reply</button>
+                                <div class="form-popup" id="replyform">
+                                    <form method="POST" action="{{url_for('reply', thread_id=thread.id, comment_id=comment.id)}}" class="form-container">
+                                            <label for="reply">reply</label>
+                                            <input type="text" placeholder="Tell him he's stupid" required>
+                                            <button type="submit" class="btn bt-primary">Send</button>
+                                            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>                
+                                    </form>
+                                </div> #}
+                            <td>
+                                <a href="{{url_for('reply', thread_id=thread.id, comment_id=comment.id)}}">reply</a>
+                            </td>
+                </tr>
+
+                
+                    
+                    
+                </tr>
+                
             </tr>
         </table>
         
                 
         {% endfor %}
     </div>
+    
     <div>
         <h2> New Comment</h2>
-        <form method="POST">
+        <form method="POST" id="new_form">
             <div class="form-group">
-                {{form.text(rows='25',cols='100')}}            </div>    
+                {{form.text(rows='25',cols='100')}}
+            </div>    
             <p><input class="btn btn-primary" type="submit" value="submit"></p>
 
         </form>

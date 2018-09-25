@@ -3,13 +3,23 @@
     <head>
       <meta charset="utf-8">
       <title>Tsoha</title>
+      <script src="{{url_for('static', filename='replybox.js')}}"></script>
+      <link rel="stylesheet" href="{{url_for('static', filename='replyform.css')}}">
     </head>
 
     <body>
-      {% block body %}
+      {% if current_user.is_authenticated %}
       <p>
-
+        {{ current_user.name}} <a href="{{ url_for('auth_logout') }}">Kirjaudu ulos</a>
       </p>
+      {% else %}
+      <a href="{{ url_for('auth_login') }}">Kirjaudu</a>
+      {% endif %}
+      
+      {% block body %}
+        <p>
+          Quality Content.
+        </p>
       {% endblock %}
     </body>
   </html>
