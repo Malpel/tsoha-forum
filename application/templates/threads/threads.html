@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block body %}
-    <h1>Keskustelut</h1>
+    <h1>{{category.name}}</h1>
     <ul>
         {% for thread in threads %}
         <li class="list-group-item">
@@ -11,7 +11,8 @@
         {% endfor %}
     </ul>
     <div>
-        <a href="{{url_for('new_thread')}}">Aloita uusi</a>
+        <a href="{{url_for('new_thread', id=category.id)}}">Aloita uusi</a>
         <a href="{{url_for('index')}}">Etusivulle</a>
+        <a href="{{url_for('list_categories')}}">Takaisin</a>
     </div>
 {% endblock %}

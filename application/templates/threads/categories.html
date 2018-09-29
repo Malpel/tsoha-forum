@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <h1>Alueet</h1>
+    <ul>
+        {% for category in categories %}
+        <li class="list-group-item">
+            <a href="/{{category.id}}/threads">{{category.name}}</a>
+  
+        </li>
+        {% endfor %}
+    </ul>
+    <div>
+        <a href="{{url_for('index')}}">Etusivulle</a>
+    </div>
+{% endblock %}
