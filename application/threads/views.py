@@ -41,21 +41,23 @@ def read_thread(id, thread_id):
     form = CommentForm(request.form)
     thread = Thread.query.get(thread_id)
 
-    #cte = db.session.query(Comment).filter_by(thread_id=thread_id)\
-    #.filter(Comment.parent_id == None)\
-    #.cte(recursive=True)
-    #parent = db.aliased(cte)
-    #child = db.aliased(Comment)
+    cte = db.session.query(Comment).filter_by(thread_id=thread_id)\
+    .filter(Comment.parent_id == None)\
+    .cte(recursive=True)
+    parent = db.aliased(cte)
+    child = db.aliased(Comment)
  
-   #kwery = parent.union_all(db.session.query(child)\
-    #.join(parent, child.parent_id == parent.c.id))
+    kwery = parent.union_all(db.session.query(child)\
+    .join(parent, child.parent_id == parent.c.id))
     
-    #comments = db.session.query(kwery).order_by(kwery.c.id).all()
-
+    comments = db.session.query(kwery).order_by(kwery.c.id).all()
+    
+    # TODO: laita threaded comments toimimaan jotenkin herokussa
+    #Comment.comment_thread(thread_id)
     if request.method == "POST" and form.validate():
         new_comment(thread_id, form)
         return redirect(url_for("read_thread", id=id, thread_id=thread_id))
-    return render_template("threads/thread.html", category=id, thread=thread, comments=Comment.comment_thread(thread_id), form=form)
+    return render_template("threads/thread.html", category=id, thread=thread, comments=comments, form=form)
 
 
 #@app.route("/<string:id>/threads/<string:thread_id>/poista")
