@@ -39,11 +39,11 @@ def auth_logout():
 def register():
     form = LoginForm(request.form)
     if request.method == "POST" and form.validate():
-        pw_hash = bcrypt.generate_password_hash(form.password.data)
+        pw_hash = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         u = User(form.username.data, pw_hash)
         db.session().add(u)
         db.session().commit()
-        ur = UserRole(u.id, 3)
+        ur = UserRole(u.id, 2)
         db.session().add(ur)
         db.session().commit()
         return redirect(url_for("auth_login"))

@@ -46,11 +46,11 @@ def load_user(user_id):
     return User.query.get(user_id)
 
 def sample_db():
-    admin = User("admin", bcrypt.generate_password_hash("admin"))
+    admin = User("admin", bcrypt.generate_password_hash("admin").decode('utf-8'))
     db.session().add(admin)
-    monkey = User("SunWukong", bcrypt.generate_password_hash("xiyouji"))
+    monkey = User("SunWukong", bcrypt.generate_password_hash("xiyouji").decode('utf-8'))
     db.session().add(monkey)
-    generic_user = User("generic_user", bcrypt.generate_password_hash("salis"))
+    generic_user = User("generic_user", bcrypt.generate_password_hash("salis").decode('utf-8'))
     db.session().add(generic_user)
     db.session().commit()
 
