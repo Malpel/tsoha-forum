@@ -3,7 +3,6 @@ from flask_login import current_user, login_manager, login_required
 from application import app, db
 from application.threads.models import Thread, Comment, Category
 from application.threads.forms import ThreadForm, CommentForm
-from sqlalchemy.orm.attributes import  set_committed_value
 from collections import defaultdict
 
 
@@ -41,55 +40,45 @@ def new_thread(id):
 def read_thread(id, thread_id):
     form = CommentForm(request.form)
     thread = Thread.query.get(thread_id)
-    '''
-    WITH RECURSIVE cte AS ( 
-    SELECT comment.id, commen.parent_id 
-    FROM comment 
-    WHERE parent_id IS NULL UNION ALL 
-    SELECT comment.id, comment.parent_id FROM comment 
-    INNER JOIN cte ON comment.parent_id = cte.id 
-    WHERE comment.parent_id is NOT NULL ORDER BY parent_id DESC, id) 
-    SELECT * FROM cte GROUP_BY id, parent_id;
-    '''
-    cte = db.session.query(Comment).filter_by(thread_id=thread_id)\
-    .filter(Comment.parent_id == None)\
-    .cte(recursive=True)
-    parent = db.aliased(cte)
-    child = db.aliased(Comment)
+
+    #cte = db.session.query(Comment).filter_by(thread_id=thread_id)\
+    #.filter(Comment.parent_id == None)\
+    #.cte(recursive=True)
+    #parent = db.aliased(cte)
+    #child = db.aliased(Comment)
  
-    kwery = parent.union_all(db.session.query(child)\
-    .join(parent, child.parent_id == parent.c.id))
+   #kwery = parent.union_all(db.session.query(child)\
+    #.join(parent, child.parent_id == parent.c.id))
     
-    # ei lähelläkään yllä olevan sql-kyselyn tulosta, koska cte ei voi order_by eikä cte voi queryä
-    comments = db.session.query(kwery).order_by(kwery.c.id).all()
+    #comments = db.session.query(kwery).order_by(kwery.c.id).all()
 
     if request.method == "POST" and form.validate():
-        new_comment(id, form)
+        new_comment(thread_id, form)
         return redirect(url_for("read_thread", id=id, thread_id=thread_id))
-    return render_template("threads/thread.html", category=id, thread=thread, comments=comments, form=form)
+    return render_template("threads/thread.html", category=id, thread=thread, comments=Comment.comment_thread(thread_id), form=form)
 
 
-@app.route("/<string:id>/threads/<string:thread_id>/poista")
-@login_required
-def delete_thread(id, thread_id):
-    db.session.query(Comment).filter(Comment.thread_id==thread_id).delete()
-    db.session.query(Thread).filter(Thread.id==thread_id).delete()
-    db.session.commit()
-    return redirect(url_for("get_threads"))
+#@app.route("/<string:id>/threads/<string:thread_id>/poista")
+#@login_required
+#def delete_thread(id, thread_id):
+#    db.session.query(Comment).filter(Comment.thread_id==thread_id).delete()
+#    db.session.query(Thread).filter(Thread.id==thread_id).delete()
+#    db.session.commit()
+#    return redirect(url_for("get_threads"))
 
     
 @login_required
-def new_comment(id, form):
+def new_comment(thread_id, form):
     c = Comment(form.text.data)
-    c.thread_id = id
+    c.thread_id = thread_id
     c.user = current_user.id
     db.session().add(c)
     db.session().commit()
 
 
-@app.route("/<string:id>/threads/<string:thread_id>/<string:comment_id>/edit", methods=["GET", "POST"])
+@app.route("/<string:comment_id>/edit", methods=["GET", "POST"])
 @login_required
-def edit_comment(id, thread_id, comment_id):
+def edit_comment(comment_id):
     
     form = CommentForm(request.form)
     comment = db.session.query(Comment).filter(Comment.id==comment_id).first()
@@ -104,9 +93,9 @@ def edit_comment(id, thread_id, comment_id):
     return render_template("threads/edit.html", form=form, comment=comment)
 
 
-@app.route("/<string:id>/threads/<string:thread_id>/<string:comment_id>/reply", methods=["GET", "POST"])
+@app.route("/<string:thread_id>/<string:comment_id>/reply", methods=["GET", "POST"])
 @login_required
-def reply(id, thread_id, comment_id):
+def reply(thread_id, comment_id):
     form = CommentForm(request.form)
     if request.method == "POST" and form.validate():
         c = Comment(form.text.data)

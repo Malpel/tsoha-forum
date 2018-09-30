@@ -11,7 +11,7 @@ class User(db.Model):
     date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
     onupdate=db.func.current_timestamp())
     
-    username = db.Column(db.String(144), nullable=False)
+    username = db.Column(db.String(144), nullable=False, unique=True)
     password = db.Column(db.String(144), nullable=False)
     role = db.relationship('Role', secondary='user_role')
     comments = db.relationship('Comment', backref='account', lazy=True)
@@ -34,11 +34,19 @@ class User(db.Model):
         return True
 
     def roles(self):
-        stmt = text("SELECT role.name FROM account, role, user_role"
-        "WHERE account.id = user_role.user_id AND user_role.role_id = role.id;")
+        stmt = text("SELECT role_id FROM user_role WHERE user_id = :user").params(user=self.id)
+        res = db.engine.execute(stmt).first()
+        role = res[0]
+        return role
+
+    def find_all_comments(self):
+        stmt = text("SELECT * FROM comment WHERE user = :user GROUP BY comment.thread_id").params(user=self.id)
         res = db.engine.execute(stmt)
         return res
 
+    #def started_threads():
+
+    #def 
 
 class Role(db.Model):
     __tablename__ = "role"

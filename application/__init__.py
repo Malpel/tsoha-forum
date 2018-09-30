@@ -1,5 +1,8 @@
 from flask import Flask
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 app = Flask(__name__)
+
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -60,6 +63,7 @@ def login_required(role="ANY"):
 
 from application import views
 from application.threads import models
+from application.threads.models import Thread, Comment, Category
 from application.threads import views
 from application.auth import models
 from application.auth import views
@@ -74,3 +78,9 @@ try:
     db.create_all()
 except:
     pass
+
+admin = Admin(app)
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Category, db.session))
+admin.add_view(ModelView(Thread, db.session))
+admin.add_view(ModelView(Comment, db.session))

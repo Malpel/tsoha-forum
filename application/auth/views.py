@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user, current_user
 from application import app, db
 from application.auth.models import User, UserRole
 from application.auth.forms import LoginForm
+from application.admin import admin
 
 
 @app.route("/auth/login", methods=["GET", "POST"])
@@ -16,8 +17,12 @@ def auth_login():
     
     if not user:
         return render_template("auth/loginform.html", form=form, error="Wrong login credentials")
-
+        
     login_user(user)
+    
+    if user.roles() == 1:
+        return redirect(url_for("admin.index"))
+        
     return redirect(url_for("index"))
 
 
