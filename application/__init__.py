@@ -44,7 +44,7 @@ from application.auth import views
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
-'''
+
 def sample_db():
     admin = User("admin", bcrypt.generate_password_hash("admin"))
     db.session().add(admin)
@@ -52,12 +52,13 @@ def sample_db():
     db.session().add(monkey)
     generic_user = User("generic_user", bcrypt.generate_password_hash("salis"))
     db.session().add(generic_user)
+    db.session().commit()
 
     role1 = Role("admin")
     db.session().add(role1)
     role2 = Role("user")
     db.session().add(role2)
-    
+    db.session().commit()
 
     urole1 = UserRole(1, 1)
     db.session().add(urole1)
@@ -65,6 +66,7 @@ def sample_db():
     db.session().add(urole2)
     urole3 = UserRole(3, 2)
     db.session().add(urole3)
+    db.session().commit()
 
     alueet = [
         "Yleistä keskustelua musiikista", "Mainstream", "Hevimeteli", "Elektroninen musiikki", "Aito ug ja trve kvlt musa", "Bysanttilainen dädä",
@@ -80,7 +82,7 @@ def sample_db():
     return
 
 db.drop_all()
-'''
+
 try:
     db.create_all()
 except:
@@ -92,5 +94,5 @@ admin.add_view(ModelView(Category, db.session))
 admin.add_view(ModelView(Thread, db.session))
 admin.add_view(ModelView(Comment, db.session))
 #admin.add_view(ModelView(UserRole, db.session))
-#sample_db()
+sample_db()
 
