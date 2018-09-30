@@ -44,10 +44,6 @@ class User(db.Model):
         res = db.engine.execute(stmt)
         return res
 
-    #def started_threads():
-
-    #def 
-
 class Role(db.Model):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True)

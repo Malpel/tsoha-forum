@@ -2,7 +2,7 @@ from application import db
 from application.models import Base
 from sqlalchemy.sql import text
 
-# TODO: materiaali 4.1 abstrahoi, ei toiminut odotetusti, kokeile uudestaan
+# TODO: materiaali 4.1 abstrahoi, ei toiminut odotetusti, kokeile uudestaan jossain välissä
 class Thread(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     

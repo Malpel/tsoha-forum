@@ -1,9 +1,9 @@
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, current_user
-from application import app, db
+from application import app, db, bcrypt
 from application.auth.models import User, UserRole
 from application.auth.forms import LoginForm
-from application.admin import admin
+#from flask_bcrypt import Bcrypt
 
 
 @app.route("/auth/login", methods=["GET", "POST"])
@@ -12,11 +12,14 @@ def auth_login():
         return render_template("auth/loginform.html", form = LoginForm())
 
     form = LoginForm(request.form)
-    if form.validate():
-        user = User.query.filter_by(username=form.username.data, password=form.password.data).first()
     
-    if not user:
-        return render_template("auth/loginform.html", form=form, error="Wrong login credentials")
+    if form.validate():
+        
+        user = User.query.filter_by(username=form.username.data).first()
+        bcrypt.check_password_hash(user.password, form.password.data)
+    
+        if not user:
+            return render_template("auth/loginform.html", form=form, error="Wrong login credentials")
         
     login_user(user)
     
@@ -36,7 +39,8 @@ def auth_logout():
 def register():
     form = LoginForm(request.form)
     if request.method == "POST" and form.validate():
-        u = User(form.username.data, form.password.data)
+        pw_hash = bcrypt.generate_password_hash(form.password.data)
+        u = User(form.username.data, pw_hash)
         db.session().add(u)
         db.session().commit()
         ur = UserRole(u.id, 3)

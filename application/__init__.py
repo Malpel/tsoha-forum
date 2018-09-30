@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_bcrypt import Bcrypt
+
 app = Flask(__name__)
 
 
@@ -15,9 +17,10 @@ else:
     app.config["SQLALCHEMY_ECHO"] = True
 
 db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 
-# kirjautuminen
-from application.auth.models import User
+
+from application.auth.models import User, UserRole, Role
 from os import urandom
 app.config["SECRET_KEY"] = urandom(32)
 
@@ -28,38 +31,6 @@ login_manager.init_app(app)
 login_manager.login_view = "auth_login"
 login_manager.login_message = "Please login"
 
-
-# roles in login_required
-'''
-from functools import wraps
-
-def login_required(role="ANY"):
-    def wrapper(fn):
-        @wraps(fn)
-        def decorated_view(*args, **kwargs):
-            if not current_user:
-                return login_manager.unauthorized()
-          
-            if not current_user.is_authenticated():
-                return login_manager.unauthorized()
-            
-            unauthorized = False
-
-            if role != "ANY":
-                unauthorized = True
-                
-                for user_role in current_user.roles():
-                    if user_role == role:
-                        unauthorized = False
-                        break
-
-            if unauthorized:
-                return login_manager.unauthorized()
-            
-            return fn(*args, **kwargs)
-        return decorated_view
-    return wrapper
-'''
 
 from application import views
 from application.threads import models
@@ -74,6 +45,42 @@ from application.auth import views
 def load_user(user_id):
     return User.query.get(user_id)
 
+def sample_db():
+    admin = User("admin", bcrypt.generate_password_hash("admin"))
+    db.session().add(admin)
+    monkey = User("SunWukong", bcrypt.generate_password_hash("xiyouji"))
+    db.session().add(monkey)
+    generic_user = User("generic_user", bcrypt.generate_password_hash("salis"))
+    db.session().add(generic_user)
+
+    role1 = Role("admin")
+    db.session().add(role1)
+    role2 = Role("user")
+    db.session().add(role2)
+    
+
+    urole1 = UserRole(1, 1)
+    db.session().add(urole1)
+    urole2 = UserRole(2, 2)
+    db.session().add(urole2)
+    urole3 = UserRole(3, 2)
+    db.session().add(urole3)
+
+    alueet = [
+        "Yleistä keskustelua musiikista", "Mainstream", "Hevimeteli", "Elektroninen musiikki", "Aito ug ja trve kvlt musa", "Bysanttilainen dädä",
+        "Kitarat", "Muut soittimet", "Tietokoneet ja musaohjelmat yms", "Säveltäminen ja sovittaminen", 
+        "Sekalainen"
+    ]
+
+    for i in range(len(alueet)):
+        alue = Category(alueet[i])
+        db.session().add(alue)
+
+    db.session().commit()
+    return
+
+db.drop_all()
+
 try:
     db.create_all()
 except:
@@ -84,3 +91,6 @@ admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Category, db.session))
 admin.add_view(ModelView(Thread, db.session))
 admin.add_view(ModelView(Comment, db.session))
+#admin.add_view(ModelView(UserRole, db.session))
+sample_db()
+
