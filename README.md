@@ -1,8 +1,6 @@
-# Tsoha - Soittimenomistajien.net
-
+# Tsoha 
 ## Tietojenkäsittelytieteen aineopintojen harjoitustyö.
 
-Foorumi muusiikin harrastajille, soittajille ja yleisesti muusikista kiinnostuneille.
 
 
 Testitunnukset (tunnus:salasana):
@@ -12,8 +10,10 @@ generic_user:salis - tavallinen käyttäjä
 
 
 
-[Heroku](https://tsoha-forum.herokuapp.com/) **kaikki ominaisuudet eivät välttämättä toimi, esimerkiksi kommentit toimivat hieman eri tavalla kuin omalla koneella**
+[Heroku](https://tsoha-forum.herokuapp.com/) 
+
 
 [User Stories](documentation/user_stories.md)
 
-[Tietokantakaavio](documentation/tietokantakaavio.pdf) **päivitetty vastaamaan nykyistä**
+
+[Tietokantakaavio](documentation/tietokantakaavio.pdf)

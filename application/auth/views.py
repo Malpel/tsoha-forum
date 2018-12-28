@@ -16,11 +16,12 @@ def auth_login():
     if form.validate():
         
         user = User.query.filter_by(username=form.username.data).first()
-        bcrypt.check_password_hash(user.password, form.password.data)
-    
+        
         if not user:
             return render_template("auth/loginform.html", form=form, error="Wrong login credentials")
         
+        bcrypt.check_password_hash(user.password, form.password.data)
+
     login_user(user)
     
     if user.roles() == 1:
