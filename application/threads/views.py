@@ -44,16 +44,17 @@ def read_thread(id, thread_id):
     cte = db.session.query(Comment).filter_by(thread_id=thread_id)\
     .filter(Comment.parent_id == None)\
     .cte(recursive=True)
+    
     parent = db.aliased(cte)
     child = db.aliased(Comment)
  
     kwery = parent.union_all(db.session.query(child)\
     .join(parent, child.parent_id == parent.c.id))
     
-    comments = db.session.query(kwery).order_by(kwery.c.id).all()
     
-    # TODO: laita threaded comments toimimaan jotenkin herokussa
-    #Comment.comment_thread(thread_id)
+    #comments = db.session.query(kwery).order_by(kwery.c.id).all()
+    
+    comments = Comment.comment_thread(thread_id)
     if request.method == "POST" and form.validate():
         new_comment(thread_id, form)
         return redirect(url_for("read_thread", id=id, thread_id=thread_id))
@@ -87,7 +88,7 @@ def edit_comment(comment_id):
     if request.method == "POST" and form.validate():
         text = form.text.data
         db.session.query(Comment).\
-        filter(Comment.id==id).\
+        filter(Comment.id==comment_id).\
         update({Comment.text: text}, synchronize_session=False)    
         db.session.commit()
         return redirect(url_for("read_thread", id=id, thread_id=comment.thread_id))

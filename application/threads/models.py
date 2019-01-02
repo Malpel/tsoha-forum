@@ -2,7 +2,7 @@ from application import db
 from application.models import Base
 from sqlalchemy.sql import text
 
-# TODO: materiaali 4.1 abstrahoi, ei toiminut odotetusti, kokeile uudestaan jossain välissä
+
 class Thread(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     
@@ -35,14 +35,17 @@ class Comment(db.Model):
 
     def __init__(self, text):
         self.text = text
+        
 
     def comment_thread(thread_id):
-        stmt = text("WITH RECURSIVE cte AS (SELECT comment.id, comment.parent_id, comment.user, comment.text, comment.date_created, comment.date_modifed" 
-        " FROM comment WHERE comment.thread_id = :thread_id AND parent_id IS NULL UNION ALL" 
-        " SELECT comment.id, comment.parent_id, comment.user, comment.text, comment.date_created, comment.date_modifed FROM comment" 
-        " INNER JOIN cte ON comment.parent_id = cte.id"
-        " WHERE comment.parent_id is NOT NULL ORDER BY parent_id DESC, id)"
-        " SELECT * FROM cte").params(thread_id=thread_id)
+        
+        stmt = text("WITH RECURSIVE cte(id, parent_id, account, text, date_created, date_modifed, root, level)" 
+        " AS (SELECT comment.id, comment.parent_id, comment.user, comment.text, comment.date_created, comment.date_modifed, ARRAY[comment.id], 0"  
+        " FROM comment WHERE comment.thread_id = :thread_id AND parent_id IS NULL " 
+        " UNION ALL SELECT comment.id, comment.parent_id, comment.user, comment.text, comment.date_created, comment.date_modifed, root || ARRAY[comment.id], cte.level + 1" 
+        " FROM cte"
+        " INNER JOIN comment ON comment.parent_id = cte.id)"
+        " SELECT * FROM cte ORDER BY root").params(thread_id=thread_id)
 
         res = db.engine.execute(stmt)
         threaded = []
