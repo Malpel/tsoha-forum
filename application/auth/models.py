@@ -44,6 +44,11 @@ class User(db.Model):
         res = db.engine.execute(stmt)
         return res
 
+    def find_all_started_threads(self):
+        stmt = text("SELECT * FROM Thread WHERE user = :user").params(user=self.id)
+        res = db.engine.execute(stmt)
+
+
 class Role(db.Model):
     __tablename__ = "role"
     id = db.Column(db.Integer, primary_key=True)
@@ -51,6 +56,7 @@ class Role(db.Model):
 
     def __init__(self, name):
        self.name = name
+
 
 class UserRole(db.Model):
     __tablename__ = "user_role"

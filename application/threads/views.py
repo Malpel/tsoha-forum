@@ -3,12 +3,13 @@ from flask_login import current_user, login_manager, login_required
 from application import app, db
 from application.threads.models import Thread, Comment, Category
 from application.threads.forms import ThreadForm, CommentForm
-from collections import defaultdict
+from sqlalchemy.sql import text
 
 
 @app.route("/categories")
 def list_categories():
     return render_template("threads/categories.html", categories=Category.query.all())
+
 
 @app.route("/<string:id>/threads/")
 def get_threads(id):
@@ -113,3 +114,10 @@ def delete_comment(thread_id, comment_id):
     comment.is_deleted = True
     db.session.commit()
     return redirect(url_for("read_thread", id=id, thread_id=thread_id))
+
+
+@app.route("/search/<string:search_term>")
+def search(search_term):
+    stmt = text("SELECT * FROM comment, thread WHERE user LIKE :term OR text LIKE :term").params(term=search_term)
+    res = db.engine.execute(stmt)
+    return render_template("threads/search", res=res)

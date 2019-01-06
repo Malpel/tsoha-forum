@@ -12,11 +12,13 @@
 
 <body>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+
     <a class="navbar-brand" href="#">Tsoha</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
       aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
@@ -26,9 +28,20 @@
           <a class="nav-link" href="{{ url_for('list_categories') }} ">Alueet</a>
         </li>
       </ul>
+
+
+      <div class="collapse navbar-collapse ">
+        <form class="form-inline ml-auto mr-auto ">
+          <input class="form-control" style="width: 500px" type="search" placeholder="Search" aria-label="Search" />
+          <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+        </form>
+      </div>
+    
+
       <ul class="navbar-nav navbar-right">
         {% if current_user.is_authenticated %}
-        <li class="nav-item"><a class=" form-inline mt-2 mt-md-0" href="{{ url_for('auth_logout') }}"> {{ current_user.username }} -- Logout</a> </li>
+        <li class="nav-item"><a class=" form-inline mt-2 mt-md-0" href="{{ url_for('auth_logout') }}"> {{
+            current_user.username }} -- Logout</a> </li>
         {% else %}
         <li class="nav-item">
           <a class="nav-link form-inline mt-2 mt-md-0" href="{{ url_for('auth_login') }}">Login</a>
@@ -38,11 +51,7 @@
         </li>
         {% endif %}
       </ul>
-      <div class="form-inline mt-2 mt-md-0">
 
-
-
-      </div>
     </div>
   </nav>
 
