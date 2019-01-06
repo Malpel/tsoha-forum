@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h1>Hakutulokset</h1>
+    <ul>
+        {% for r in res %}
+        <li class="list-group-item" action="">
+            <a href="{{r.id}}">{{r.text}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

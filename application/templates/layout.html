@@ -31,9 +31,9 @@
 
 
       <div class="collapse navbar-collapse ">
-        <form class="form-inline ml-auto mr-auto ">
-          <input class="form-control" style="width: 500px" type="search" placeholder="Search" aria-label="Search" />
-          <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+        <form class="form-inline ml-auto mr-auto" method="POST" action="{{ url_for('search') }}">
+
+          <input class="form-control" name="search_term" style="width: 500px" type="search" placeholder="Search" aria-label="Search" />
         </form>
       </div>
     

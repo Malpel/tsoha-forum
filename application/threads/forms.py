@@ -14,3 +14,10 @@ class CommentForm(FlaskForm):
 
     class Meta:
         csrf = False
+
+
+class SearchForm(FlaskForm):
+    search_term = StringField("search_term", [validators.Length(min=2, max=50)])
+
+    class Meta:
+        csrf = False
