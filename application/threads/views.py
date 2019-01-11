@@ -6,12 +6,12 @@ from application.threads.forms import ThreadForm, CommentForm, SearchForm
 from sqlalchemy.sql import text
 
 
-@app.route("/categories")
+@app.route("/alueet")
 def list_categories():
     return render_template("threads/categories.html", categories=Category.query.all())
 
 
-@app.route("/<string:id>/threads/")
+@app.route("/<string:id>/")
 def get_threads(id):
     category = Category.query.filter_by(id=id).first()
     threads = Thread.query.filter_by(category=id).all()
@@ -39,7 +39,7 @@ def new_thread(id):
     return render_template("threads/new.html", form=ThreadForm())
 
 
-@app.route("/<string:id>/threads/<string:thread_id>/", methods=["GET", "POST"])
+@app.route("/<string:id>/<string:thread_id>/", methods=["GET", "POST"])
 def read_thread(id, thread_id):
     form = CommentForm(request.form)
     thread = Thread.query.get(thread_id)
@@ -66,11 +66,13 @@ def new_comment(thread_id, form):
 @login_required
 def edit_comment(comment_id):
     #TODO: tee tämä
-    if comment.user != current_user.get_id():
-        return login_manager.unauthorized()
+    
 
     form = CommentForm(request.form)
     comment = db.session.query(Comment).filter(Comment.id==comment_id).first()
+
+    if comment.user != current_user.get_id():
+        return login_manager.unauthorized()
     
     if request.method == "POST" and form.validate():
         text = form.text.data
@@ -122,8 +124,5 @@ def search():
     if not form.validate():
         return redirect(url_for("index"))
 
-    #stmt = text("SELECT text FROM comment WHERE text LIKE :term").params(term=form.search_term.data)
-    #res = db.engine.execute(stmt)
     res = Comment.query.filter(Comment.text.ilike("%" + form.search_term.data + "%")).all()
-
     return render_template("/search.html", res=res)

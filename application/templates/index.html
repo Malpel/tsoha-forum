@@ -4,6 +4,18 @@
 <h1>Tsoha-forum.net</h1>
 <p class="lead">Keskustelufoorumi - Tietokantasovellusharjoitustyö</p>
 
+<div>
+    <h2>Alueet</h2>
+    {% for cat in categories %}
+    <table class="table">
+
+        <td><a href="">{{cat.name}}</a></td>
+
+    </table>
+    {% endfor %}
+</div>
+
+
 <p>Viimeisimmät</p>
 
 
