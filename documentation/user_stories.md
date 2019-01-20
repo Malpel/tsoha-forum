@@ -10,19 +10,11 @@ Käyttäjänä minun pitää rekisteröityä ja/tai kirjautua sisään, jotta vo
 
 ---
 
-Rekisteröityneenä käyttäjänä voin kuulua ryhmiin.
-
----
-
 Käyttäjänä voin hakea kirjoituksia tietokannasta eri perustein (kirjoittaja, aihe, ikä).
 
 ---
 
 Käyttäjänä näen tietynikäiset kirjoitukset oletusarvoisesti, jotta näkisin lukemattomat kirjotukset helposti.
-
----
-
-Käyttäjänä näen, ketkä ovat lukeneet kirjoituksen.
 
 ---
 
