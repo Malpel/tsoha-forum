@@ -69,9 +69,7 @@ def sample_db():
     db.session().commit()
 
     alueet = [
-        "Yleistä keskustelua musiikista", "Mainstream", "Hevimeteli", "Elektroninen musiikki", "Aito ug ja trve kvlt musa", "Bysanttilainen dädä",
-        "Kitarat", "Muut soittimet", "Tietokoneet ja musaohjelmat yms", "Säveltäminen ja sovittaminen", 
-        "Sekalainen"
+        "Yleinen", "Bysanttilainen dädä", "Sekalainen"
     ]
 
     for i in range(len(alueet)):
@@ -81,7 +79,7 @@ def sample_db():
     db.session().commit()
     return
 
-#db.drop_all()
+db.drop_all()
 
 try:
     db.create_all()
@@ -94,5 +92,5 @@ admin.add_view(ModelView(Category, db.session))
 admin.add_view(ModelView(Thread, db.session))
 admin.add_view(ModelView(Comment, db.session))
 #admin.add_view(ModelView(UserRole, db.session))
-#sample_db()
+sample_db()
 

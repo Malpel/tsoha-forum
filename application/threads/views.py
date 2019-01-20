@@ -11,7 +11,7 @@ def list_categories():
     return render_template("threads/categories.html", categories=Category.query.all())
 
 
-@app.route("/<string:id>/")
+@app.route("/<string:id>/threads")
 def get_threads(id):
     category = Category.query.filter_by(id=id).first()
     threads = Thread.query.filter_by(category=id).all()
@@ -39,7 +39,7 @@ def new_thread(id):
     return render_template("threads/new.html", form=ThreadForm())
 
 
-@app.route("/<string:id>/<string:thread_id>/", methods=["GET", "POST"])
+@app.route("/<string:id>/threads/<string:thread_id>/", methods=["GET", "POST"])
 def read_thread(id, thread_id):
     form = CommentForm(request.form)
     thread = Thread.query.get(thread_id)

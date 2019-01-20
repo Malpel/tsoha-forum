@@ -6,7 +6,7 @@
 <ul>
     {% for thread in threads %}
     <li class="list-group-item">
-        <a href="{{thread.id}}">{{thread.title}}</a>
+        <a href="{{url_for('read_thread', id=category.id, thread_id=thread.id)}}">{{thread.title}}</a>
     </li>
     {% endfor %}
 </ul>
