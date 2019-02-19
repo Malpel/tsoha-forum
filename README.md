@@ -6,6 +6,7 @@
 Testitunnukset (tunnus:salasana):
 
 admin:admin - kirjautuu admin-näkymään
+
 generic_user:salis - tavallinen käyttäjä
 
 
